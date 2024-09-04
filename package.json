@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "workspaces": [
+    "commons",
+    "api"
+  ],
+  "scripts": {
+    "build": "cd ./__scripts__/ && bash build.sh",
+    "start": "cd ./api && npm start",
+    "heroku-postbuild": "cd ./__scripts__/ && bash build.sh"
+  }
+}

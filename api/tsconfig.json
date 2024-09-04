@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "baseUrl": "./",
+    "rootDir": "./",
+    "types": ["@types/jest", "@types/node"],
+    "outDir": "./dist",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+    "resolveJsonModule": true,
+    "allowJs": true
+  },
+  "include": ["**.ts", "src/**.ts", "src/**/**.ts", "src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
