@@ -2,11 +2,11 @@
   "private": true,
   "workspaces": [
     "commons",
-    "api"
+    "qrmenu"
   ],
   "scripts": {
     "build": "cd ./__scripts__/ && bash build.sh",
-    "start": "cd ./api && npm start",
+    "start": "cd ./qrmenu && npm start",
     "heroku-postbuild": "cd ./__scripts__/ && bash build.sh"
   }
 }

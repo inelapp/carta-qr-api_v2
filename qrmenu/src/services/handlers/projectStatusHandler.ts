@@ -6,7 +6,7 @@ type ProjectThis = Service;
 async function ProjectStatusHandler(this: ProjectThis) {
 	const mongoConnection = await mongoConnections.default;
 	return {
-		service: 'api',
+		service: 'qrmenu',
 		message: 'success :)',
 		mongoConnection: mongoConnection.connection.name
 	};

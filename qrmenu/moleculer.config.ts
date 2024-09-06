@@ -5,7 +5,7 @@ import { Errors } from "moleculer";
 const { REDIS_HOST, REDIS_PORT, REDIS_PASSWORD } = process.env;
 
 const brokerConfig: BrokerOptions = {
-  namespace: "base-api",
+  namespace: "cartaqr-api",
   nodeID: null,
   metadata: {},
   logger: {
