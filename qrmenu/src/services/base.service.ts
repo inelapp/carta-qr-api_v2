@@ -4,8 +4,8 @@ import { productCreateHandler } from './handlers/productCreateHandler';
 import { categoryCreateHandler } from './handlers/categoryCreateHandler';
 
 const apiVersion = 'v1';
-const projectService: ServiceSchema = {
-	name: 'project',
+const qrmenuService: ServiceSchema = {
+	name: 'qrmenu',
 	actions: {
 		status: {
 			rest: {
@@ -31,4 +31,4 @@ const projectService: ServiceSchema = {
 	}
 };
 
-export default projectService;
+export default qrmenuService;

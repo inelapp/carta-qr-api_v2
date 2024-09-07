@@ -3,7 +3,7 @@ export interface ProductProps {
 	id?: string;
 	name: string;
 	price: number;
-	category: string;
+	categoryId: string;
 	description?: string;
 	image?: string;
 	quantity: number;
@@ -28,8 +28,8 @@ export class Product {
 		return this.props.price;
 	}
 
-	get category(): string {
-		return this.props.category;
+	get categoryId(): string {
+		return this.props.categoryId;
 	}
 
 	get description(): string | undefined {

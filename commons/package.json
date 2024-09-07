@@ -16,8 +16,10 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
+    "joi": "^17.13.3",
     "mongoose": "^8.5.1",
-    "uuid": "^10.0.0",
-    "typescript": "^5.5.4"
+    "neverthrow": "^7.1.0",
+    "typescript": "^5.5.4",
+    "uuid": "^10.0.0"
   }
 }

@@ -1,5 +1,6 @@
 export interface CreateCategoryRequestDTO {
 	name: string;
 	description: string;
-	active?: boolean;
+	merchantId: string;
+	active?: boolean | null;
 }

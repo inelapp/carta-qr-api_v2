@@ -3,7 +3,7 @@ import type { ApiSettingsSchema } from 'moleculer-web';
 import ApiGateway from 'moleculer-web';
 
 const ApiService: ServiceSchema<ApiSettingsSchema> = {
-	name: 'qrmenu',
+	name: 'api',
 	mixins: [ApiGateway],
 	settings: {
 		port: process.env.PORT != null ? Number(process.env.PORT) : 3001,
@@ -12,7 +12,7 @@ const ApiService: ServiceSchema<ApiSettingsSchema> = {
 		routes: [
 			{
 				path: '/',
-				whitelist: ['project.*'],
+				whitelist: ['qrmenu.*'],
 				mergeParams: true,
 				autoAliases: true,
 				bodyParsers: {

@@ -1,12 +1,14 @@
-import { v4 as uuid } from 'uuid';
+import { err, ok, Result } from "neverthrow";
+import { validateCategorySchema } from "./category.validation";
 
 export interface CategoryProps {
 	id?: string;
 	name: string;
 	description: string;
-	active: boolean | null;
-	createdAt: Date | null;
-	updatedAt: Date | null;
+	merchantId: string;
+	active?: boolean | null;
+	createdAt?: Date | null;
+	updatedAt?: Date | null;
 }
 
 export class Category {
@@ -14,8 +16,7 @@ export class Category {
 
 	readonly props: CategoryProps;
 
-	constructor(props: CategoryProps, id?: string) {
-		this.id = id || uuid();
+	constructor(props: CategoryProps) {
 		this.props = props;
 	}
 
@@ -25,6 +26,10 @@ export class Category {
 
 	get description() {
 		return this.props.description;
+	}
+
+	get merchantId() {
+		return this.props.merchantId;
 	}
 
 	get active() {
@@ -39,27 +44,12 @@ export class Category {
 		return this.props.updatedAt;
 	}
 
-	set name(name: string) {
-		this.props.name = name;
-	}
-
-	set description(description: string) {
-		this.props.description = description;
-	}
-
-	set active(active: boolean | null) {
-		this.props.active = active;
-	}
-
-	set createdAt(createdAt: Date | null) {
-		this.props.createdAt = createdAt;
-	}
-
-	set updatedAt(updatedAt: Date | null) {
-		this.props.updatedAt = updatedAt;
-	}
-
-	static create(props: CategoryProps, id?: string) {
-		return new Category(props, id);
+	static create(props: CategoryProps): Result<Category, string> {
+		const { error } = validateCategorySchema(props);
+		if(error) {
+			const categoryErrors = error.details.map((error) => error.message).join(". ");
+			return err(categoryErrors)
+		}
+		return ok(new Category(props));
 	}
 }

@@ -8,8 +8,8 @@ type Response = CreateProductResponseDTO | Error;
 class CreateProduct implements UseCase<CreateProductRequestDTO, Response> {
 	async execute(params: CreateProductRequestDTO, service?: any): Promise<Response> {
 		try {
-			const product = Product.create(params);
-			return product as Response;
+			const product = Product.create(params as any);
+			return product as any;
 		} catch (error) {
 			throw new Error(error as any);
 		}
