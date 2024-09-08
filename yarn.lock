@@ -3476,7 +3476,7 @@ moleculer-web@^0.10.7:
 
 moleculer@^0.14.34:
   version "0.14.34"
-  resolved "https://registry.npmjs.org/moleculer/-/moleculer-0.14.34.tgz"
+  resolved "https://registry.yarnpkg.com/moleculer/-/moleculer-0.14.34.tgz#bbed4d133110b8a2610be0a8c348fb2db353348b"
   integrity sha512-xILOSPqo4ATKhhAhvQXRBgMVbaKHPKBvgYasihVCmPGYK7QCeLnoOV+MD+a4/VmyEjLaAOzlIQBSYIUu0mwg9Q==
   dependencies:
     args "^5.0.3"

@@ -21,11 +21,12 @@ async function categoryCreateHandler(
 	const result = await createCategory.execute({ name, description, active, merchantId });
 	
 	if(result.isErr()){
-		switch(result.error.constructor){
+		const error = result.error;
+		switch(error.constructor){
 			case CreateCategoryBadRequestError:
-				throw new MoleculerError(result.error.message, 400, result.error.name);
+				throw new MoleculerError(error.message, 400, error.constructor.name);
 			default:
-				throw new MoleculerError(result.error.message, 500, result.error.name);
+				throw new MoleculerError(error.message, 500, result.constructor.name);
 		} 
 	}
 

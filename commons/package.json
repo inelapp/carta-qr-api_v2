@@ -17,6 +17,7 @@
   "dependencies": {
     "dotenv": "^16.4.5",
     "joi": "^17.13.3",
+    "moleculer": "^0.14.34",
     "mongoose": "^8.5.1",
     "neverthrow": "^7.1.0",
     "typescript": "^5.5.4",

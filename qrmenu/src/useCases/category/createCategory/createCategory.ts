@@ -5,8 +5,9 @@ import { Category } from '@service/commons/dist/src/domains/category/category';
 import { err, ok, Result } from 'neverthrow';
 import { CreateCategoryBadRequestError } from './createCategoryErrors';
 import { ICategoryRepository } from '@service/commons/dist/src/repositories';
+import { UnexpectedError } from '@service/commons/dist/src/shared';
 
-type Response = Result<CreateCategoryResponseDTO, CreateCategoryBadRequestError>;
+type Response = Result<CreateCategoryResponseDTO, CreateCategoryBadRequestError | UnexpectedError>;
 
 class CreateCategory implements UseCase<CreateCategoryRequestDTO, Response> {
 	private categoryRepository: ICategoryRepository;
@@ -26,8 +27,7 @@ class CreateCategory implements UseCase<CreateCategoryRequestDTO, Response> {
 			const result = await this.categoryRepository.createCategory(payload);
 			return ok(result);
 		} catch (error) {
-			console.log(error);
-			throw new Error(error as any);
+			return err(new UnexpectedError(error));
 		}
 	}
 }

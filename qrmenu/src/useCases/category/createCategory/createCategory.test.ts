@@ -9,7 +9,7 @@ describe('Create Category', () => {
 			active: true
 		};
 
-		const createdCategory: CreateCategoryResponseDTO | Error = await createCategory.execute(category);
+		const createdCategory: CreateCategoryResponseDTO | Error = await createCategory.execute(category as any) as any;
 
 		if (createdCategory instanceof Error) {
 			expect(createdCategory).toBeInstanceOf(Error);

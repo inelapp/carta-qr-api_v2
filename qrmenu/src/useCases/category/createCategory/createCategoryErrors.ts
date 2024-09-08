@@ -1,9 +1,8 @@
-import { Result } from "neverthrow";
+import UseCaseError from "@service/commons/dist/src/shared/UseCaseError";
 
-class CreateCategoryBadRequestError extends Error {
+class CreateCategoryBadRequestError extends UseCaseError {
     constructor(message: string) {
         super(message);
-        this.name = "CreateCategoryBadRequestError";
     }
 }
 
