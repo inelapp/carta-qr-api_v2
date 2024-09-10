@@ -11,3 +11,9 @@ export class UnexpectedError extends UseCaseError {
         return new UnexpectedError(err);
     }
 }
+
+export class MerchantNotFoundError extends UseCaseError {
+    constructor(merchantCode: string) {
+        super(`Merchant with code ${merchantCode} not found`);
+    }
+}

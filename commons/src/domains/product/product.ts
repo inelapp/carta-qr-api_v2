@@ -1,15 +1,21 @@
+import { err, ok, Result } from 'neverthrow';
 import { v4 as uuid } from 'uuid';
+import { validateProductSchema } from './product.validation';
+
 export interface ProductProps {
 	id?: string;
 	name: string;
 	price: number;
+	price_2?: number;
 	categoryId: string;
+	merchantId: string;
 	description?: string;
 	image?: string;
 	quantity: number;
 	createdAt?: Date;
 	updatedAt?: Date;
 }
+
 export class Product {
 	readonly id: string;
 
@@ -36,12 +42,12 @@ export class Product {
 		return this.props.description;
 	}
 
-	get image(): string | undefined {
-		return this.props.image;
+	get merchantId(): string {
+		return this.props.merchantId;
 	}
 
-	get quantity(): number {
-		return this.props.quantity;
+	get image(): string | undefined {
+		return this.props.image;
 	}
 
 	get createdAt(): Date | undefined {
@@ -52,7 +58,20 @@ export class Product {
 		return this.props.updatedAt;
 	}
 
-	static create(props: ProductProps, id?: string): Product {
-		return new Product(props, id);
+	get price_2(): number | undefined {
+		return this.props.price_2;
+	}
+
+	get quantity(): number {
+		return this.props.quantity;
+	}
+
+	static create(props: ProductProps): Result<Product, string> {
+		const { error } = validateProductSchema(props);
+		if(error) {
+			const productErrors = error.details.map((error) => error.message).join(', ');
+			return err(productErrors);	
+		}
+		return ok(new Product(props));
 	}
 }

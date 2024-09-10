@@ -16,10 +16,11 @@ export interface IGetCategoryResponse {
 }
 
 export interface CategoryFilter {
-    id: string;
+    id?: string;
     merchantId?: string;
     name?: string;
     active?: boolean;
+    merchantCode?: string;
 }
 
 export type CategoryDb = ICategoryDb & { merchantId: IMerchantDb }

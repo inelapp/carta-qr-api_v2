@@ -34,10 +34,14 @@ export class CategoryImplRepository implements ICategoryRepository {
         }
     }
 
-    async getCategories(): Promise<IGetCategoryResponse[]> {
+    async getCategories(filters?: CategoryFilter): Promise<IGetCategoryResponse[]> {
         try {
             const categories = await this.categoryEntity
-                .find()
+                .find({
+                    $or: [
+                        { merchantId: filters?.merchantId }
+                    ]
+                })
                 .populate({
                     path: 'merchantId',
                     select: '_id name merchantCode'

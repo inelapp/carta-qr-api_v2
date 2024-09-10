@@ -2,6 +2,10 @@ export interface CreateProductRequestDTO {
 	name: string;
 	description: string;
 	price: number;
-	category: string;
+	price_2?: number;
+	categoryId: string;
+	merchantId?: string;
+	merchantCode: string;
+	image?: string;
 	quantity: number;
 }

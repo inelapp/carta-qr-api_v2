@@ -3,4 +3,5 @@ export interface UpdateCategoryRequestDto {
     name: string;
     description: string;
     active: boolean;
+    merchantCode: string;
 }

@@ -25,12 +25,13 @@ const categorySchema = new Schema<ICategoryDb>({
 
 const productSchema = new Schema<IProductDb>({
     name: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     categoryId: { type: Schema.Types.ObjectId, ref: "Category", required: true },
-    img: { type: String, required: true },
+    image: { type: String, required: false },
     price: { type: Number, required: true },
-    price_2: { type: Number, required: true },
-    merchantId: { type: Schema.Types.ObjectId, ref: "Merchant", required: true }
+    price_2: { type: Number, required: false },
+    merchantId: { type: Schema.Types.ObjectId, ref: "Merchant", required: true },
+    quantity: { type: Number, required: true },
 });
 
 const categoryModel = model<ICategoryDb>("Category", categorySchema, "categories");

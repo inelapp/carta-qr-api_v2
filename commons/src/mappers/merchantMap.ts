@@ -2,8 +2,19 @@ import { IMerchantDb } from "src/db";
 import { Merchant } from "src/domains";
 
 export interface MerchantFilter {
-    id: string;
-    merchantCode: string;
+    id?: string;
+    merchantCode?: string;
+}
+
+export interface IMerchantValidateOptions {
+    productId?: string;
+    categoryId?: string;
+}
+
+export interface IMerchantValidateResponse {
+    existMerchant: boolean;
+    isOwner: boolean;
+    merchantData: IMerchantDb;
 }
 
 export interface IGetMerchantResponse {

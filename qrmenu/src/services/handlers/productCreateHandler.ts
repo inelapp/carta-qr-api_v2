@@ -2,6 +2,8 @@ import { Context, Errors, Service } from 'moleculer';
 import { CreateProductResponseDTO } from '../../useCases/product/createProduct/createProductResponseDTO';
 import { CreateProductRequestDTO } from '../../useCases/product/createProduct/createProductRequestDTO';
 import { createProduct } from '../../useCases/product/createProduct';
+import { CreateProductBadRequestErrors, CreateProductMerchantNotOwnerError } from '../../useCases/product/createProduct/createProductErrors';
+import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
 
 type ProductThis = Service;
 const { MoleculerError } = Errors;
@@ -15,17 +17,25 @@ async function productCreateHandler(
 	this: ProductThis,
 	ctx: Context<CreateProductRequestDTO>
 ): Promise<ProductCreateResponse> {
-	const { name, description, price, category, quantity } = ctx.params;
-
-	try {
-		const product = createProduct.execute({ name, description, price, category, quantity });
-		return {
-			success: true,
-			data: product as unknown as CreateProductResponseDTO
-		};
-	} catch (error) {
-		throw new MoleculerError((error as Error).message, 500, 'PRODUCT_CREATE_ERROR');
+	const { name, description, price, categoryId, quantity, merchantCode } = ctx.params;
+	const result = await createProduct.execute({ name, description, price, categoryId, quantity, merchantCode: merchantCode.toUpperCase() });
+	if(result.isErr()){
+		const error = result.error;
+		switch(error.constructor){
+			case CreateProductBadRequestErrors:
+				throw new MoleculerError(error.message, 400, error.constructor.name);
+			case CreateProductMerchantNotOwnerError:
+				throw new MoleculerError(error.message, 400, error.constructor.name);
+			case MerchantNotFoundError:
+				throw new MoleculerError(error.message, 404, error.constructor.name);
+			default:
+				throw new MoleculerError(error.message, 500, error.constructor.name);
+		}
 	}
+	return {
+		success: true,
+		data: result.value
+	};
 }
 
 export { productCreateHandler };

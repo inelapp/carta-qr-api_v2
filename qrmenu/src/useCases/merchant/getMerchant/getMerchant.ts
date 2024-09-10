@@ -19,11 +19,13 @@ class GetMerchant implements UseCase<GetMerchantRequestDto, Response> {
     async execute(params: GetMerchantRequestDto, service?: any): Promise<Response> {
         try {
             const instanceOrError = createInstanceOrError<MerchantFilter>(merchantGetSchema, params);
+
             if(instanceOrError.isErr()) {
                 return err(new GetMerchantBadRequestError(instanceOrError.error));
             }
 
-            const result = await this.merchantRepository.getMerchantById(params.id);
+            const result = await this.merchantRepository.getMerchantById(instanceOrError.value.id!);
+            
             if(!result) {
                 return err(new GetMerchantNotFoundError());
             }

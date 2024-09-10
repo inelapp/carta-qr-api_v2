@@ -2,7 +2,8 @@ import { Context, Errors, Service } from 'moleculer';
 import { GetCategoryResponseDto } from '../../useCases/category/getCategory/getCategoryResponseDto';
 import { GetCategoryRequestDto } from '../../useCases/category/getCategory/getCategoryRequestDto';
 import { getCategory } from '../../useCases/category/getCategory';
-import { GetCategoryBadRequestError, GetCategoryNotFoundError } from '../../useCases/category/getCategory/getCategoryErrors';
+import { GetCategoryBadRequestError, GetCategoryMerchantNotOwnerError, GetCategoryNotFoundError } from '../../useCases/category/getCategory/getCategoryErrors';
+import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
 
 type CategoryThis = Service;
 const { MoleculerError } = Errors;
@@ -16,8 +17,8 @@ async function categoryGetHandler(
 	this: CategoryThis,
 	ctx: Context<GetCategoryRequestDto>
 ): Promise<CategoryGetResponse> {
-    const { id } = ctx.params;
-	const result = await getCategory.execute({ id });
+    const { id, merchantCode } = ctx.params;
+	const result = await getCategory.execute({ id, merchantCode: merchantCode.toUpperCase() });
 	
 	if(result.isErr()){
 		const error = result.error;
@@ -26,6 +27,10 @@ async function categoryGetHandler(
                 throw new MoleculerError(error.message, 400, error.constructor.name);
             case GetCategoryNotFoundError:
                 throw new MoleculerError(error.message, 404, error.constructor.name);
+            case MerchantNotFoundError:
+                throw new MoleculerError(error.message, 404, error.constructor.name);
+            case GetCategoryMerchantNotOwnerError:
+                throw new MoleculerError(error.message, 400, error.constructor.name);
 			default:
 				throw new MoleculerError(error.message, 500, error.constructor.name);
 		} 

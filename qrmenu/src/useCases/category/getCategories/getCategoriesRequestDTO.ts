@@ -1,1 +1,3 @@
-export interface GetCategoriesRequestDTO {}
+export interface GetCategoriesRequestDTO {
+    merchantCode: string;
+}

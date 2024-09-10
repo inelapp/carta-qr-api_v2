@@ -1,10 +1,11 @@
 export interface CreateProductResponseDTO {
 	id: string;
 	name: string;
-	description: string;
+	description?: string;
 	price: number;
-	category: string;
-	quantity: number;
-	createdAt: Date;
-	updatedAt: Date;
+	categoryId: string;
+	merchantId: string;
+	image?: string;
+	createdAt?: Date | null;
+	updatedAt?: Date | null;
 }

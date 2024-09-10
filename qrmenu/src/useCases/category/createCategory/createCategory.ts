@@ -4,22 +4,30 @@ import { CreateCategoryRequestDTO } from './createCategoryRequestDTO';
 import { Category } from '@service/commons/dist/src/domains/category/category';
 import { err, ok, Result } from 'neverthrow';
 import { CreateCategoryBadRequestError } from './createCategoryErrors';
-import { ICategoryRepository } from '@service/commons/dist/src/repositories';
-import { UnexpectedError } from '@service/commons/dist/src/shared';
+import { ICategoryRepository, IMerchantRepository } from '@service/commons/dist/src/repositories';
+import { MerchantNotFoundError, UnexpectedError } from '@service/commons/dist/src/shared';
 
-type Response = Result<CreateCategoryResponseDTO, CreateCategoryBadRequestError | UnexpectedError>;
+type Response = Result<CreateCategoryResponseDTO, CreateCategoryBadRequestError | MerchantNotFoundError | UnexpectedError>;
 
 class CreateCategory implements UseCase<CreateCategoryRequestDTO, Response> {
-	private categoryRepository: ICategoryRepository;
+	private readonly categoryRepository: ICategoryRepository;
+    private readonly merchantRepository: IMerchantRepository;
 
-	constructor(categoryRepository: ICategoryRepository) {
-		this.categoryRepository = categoryRepository
-	}
+    constructor(categoryRepository: ICategoryRepository, merchantRepository: IMerchantRepository) {
+        this.categoryRepository = categoryRepository;
+        this.merchantRepository = merchantRepository;
+    }
 
 	async execute(params: CreateCategoryRequestDTO, service?: any): Promise<Response> {
 		try {
-			const categoryOrError = Category.create(params);
+			const { merchantCode, ...restParams } = params;
+			const { existMerchant, merchantData } = await this.merchantRepository.validateMerchantCode(merchantCode, {});
+			if(!existMerchant) {
+				return err(new MerchantNotFoundError(merchantCode));
+			}
 
+			const categoryOrError = Category.create({ ...restParams, merchantId: merchantData._id.toString() });
+			
 			if(categoryOrError.isErr()){
 				return err(new CreateCategoryBadRequestError(categoryOrError.error));
 			}

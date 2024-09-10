@@ -12,4 +12,10 @@ class GetCategoryNotFoundError extends UseCaseError {
     }
 }
 
-export { GetCategoryBadRequestError, GetCategoryNotFoundError }
+class GetCategoryMerchantNotOwnerError extends UseCaseError {
+    constructor() {
+        super('Merchant is not the owner of the category');
+    }
+}
+
+export { GetCategoryBadRequestError, GetCategoryNotFoundError, GetCategoryMerchantNotOwnerError }

@@ -1,6 +1,6 @@
-import { categoryRepository } from '@service/commons/dist/src/repositories';
+import { categoryRepository, merchantRepository } from '@service/commons/dist/src/repositories';
 import CreateCategory from './createCategory';
 
-const createCategory = new CreateCategory(categoryRepository);
+const createCategory = new CreateCategory(categoryRepository, merchantRepository);
 
 export { createCategory };

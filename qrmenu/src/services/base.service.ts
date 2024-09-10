@@ -9,6 +9,10 @@ import { categoryUpdateHandler } from './handlers/categoryUpdateHandler';
 import { merchantsGetHandler } from './handlers/merchantsGetHandler';
 import { merchantGetHandler } from './handlers/merchantGetHandler';
 import { merchantUpdateHandler } from './handlers/merchantUpdateHandler';
+import { checkMerchantCodeInRoute } from '@service/commons/dist/src/shared';
+import { productGetHandler } from './handlers/productGetHandler';
+import { productsGetHandler } from './handlers/productsGetHandler';
+import { productUpdateHandler } from './handlers/productUpdateHandler';
 
 const apiVersion = 'v1';
 const qrmenuService: ServiceSchema = {
@@ -52,37 +56,82 @@ const qrmenuService: ServiceSchema = {
 		createProduct: {
 			rest: {
 				method: 'POST',
-				path: `${apiVersion}/products`
+				path: `${apiVersion}/:merchantCode?/products`
 			},
-			handler: productCreateHandler
+			handler: productCreateHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
+		},
+		getProduct: {
+			rest: {
+				method: 'GET',
+				path: `${apiVersion}/:merchantCode/products/:id`
+			},
+			handler: productGetHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
+		},
+		getProducts: {
+			rest: {
+				method: 'GET',
+				path: `${apiVersion}/:merchantCode/products`
+			},
+			handler: productsGetHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
+		},
+		updateProduct: {
+			rest: {
+				method: 'PATCH',
+				path: `${apiVersion}/:merchantCode/products/:id`
+			},
+			handler: productUpdateHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
 		},
 		createCategory: {
 			rest: {
 				method: 'POST',
-				path: `${apiVersion}/categories`
+				path: `${apiVersion}/:merchantCode/categories`
 			},
-			handler: categoryCreateHandler
+			handler: categoryCreateHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
 		},
 		getCategories: {
 			rest: {
 				method: 'GET',
-				path: `${apiVersion}/categories`
+				path: `${apiVersion}/:merchantCode/categories`
 			},
-			handler: categoriesGetHandler
+			handler: categoriesGetHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
 		},
 		getCategory: {
 			rest: {
 				method: 'GET',
-				path: `${apiVersion}/categories/:id`
+				path: `${apiVersion}/:merchantCode/categories/:id`
 			},
-			handler: categoryGetHandler
+			handler: categoryGetHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
 		},
-		categoryUpdateHandler: {
+		updateCategory: {
 			rest: {
 				method: 'PATCH',
-				path: `${apiVersion}/categories/:id`
+				path: `${apiVersion}/:merchantCode/categories/:id`
 			},
-			handler: categoryUpdateHandler
+			handler: categoryUpdateHandler,
+			hooks: {
+				before: [checkMerchantCodeInRoute]
+			}
 		}
 	}
 };
