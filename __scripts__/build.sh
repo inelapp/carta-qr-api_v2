@@ -3,22 +3,19 @@ echo "Building..."
 # Navega a la raíz del proyecto
 cd "$(dirname "$0")/.."
 
-# Elimina los directorios node_modules
-echo "Removing node_modules directories..."
+# Elimina los directorios node_modules solo si es necesario (opcional)
+echo "Removing root node_modules directory..."
 rm -rf node_modules
 
-echo "Installing all dependencies..."
+# Instala todas las dependencias en la raíz usando Yarn Workspaces
+echo "Installing all dependencies with Yarn workspaces..."
 yarn install
 
-# Elimina los directorios node_modules en commons y qrmenu
-rm -rf commons/node_modules
-rm -rf qrmenu/node_modules
+# Construye los proyectos individualmente
+echo "Building commons..."
+cd commons && yarn build
 
-# Navega a los proyectos commons y qrmenu
-echo "Installing dependencies and building in commons..."
-cd commons && yarn install && yarn build
-
-echo "Installing dependencies in qrmenu..."
-cd ../qrmenu && yarn install && yarn build
+echo "Building qrmenu..."
+cd ../qrmenu && yarn build
 
 echo "Build complete."
