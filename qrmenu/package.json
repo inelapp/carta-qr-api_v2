@@ -20,12 +20,12 @@
     "moleculer": "^0.14.34",
     "moleculer-web": "^0.10.7",
     "neverthrow": "^7.1.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.0.0"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^22.0.0",
     "@typescript-eslint/parser": "5.44.0",
     "eslint": "8.55.0",
     "eslint-config-airbnb-base": "15.0.0",
