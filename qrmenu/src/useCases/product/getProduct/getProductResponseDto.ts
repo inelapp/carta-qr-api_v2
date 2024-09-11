@@ -10,7 +10,8 @@ export interface GetProductResponseDTO {
     }
     merchant: {
         id: string
-        name: string
+        name: string;
+        merchantCode: string;
     }
     image?: string
     createdAt?: Date

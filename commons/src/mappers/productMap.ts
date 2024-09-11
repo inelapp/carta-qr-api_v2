@@ -23,6 +23,7 @@ export interface IGetProductResponse {
     merchant: {
         id: string;
         name: string;
+        merchantCode: string
     };
     image?: string;
     createdAt?: Date;
@@ -57,7 +58,8 @@ export class ProductMap {
             },
             merchant: {
                 id: product.merchantId._id!,
-                name: product.merchantId.name
+                name: product.merchantId.name,
+                merchantCode: product.merchantId.merchantCode
             },
             image: product.image,
             createdAt: product.createdAt,
