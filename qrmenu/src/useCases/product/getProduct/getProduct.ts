@@ -18,10 +18,10 @@ class GetProduct implements UseCase<GetProductRequestDTO, Response> {
 
     async execute(params: GetProductRequestDTO, service?: any): Promise<Response> {
         try {
-            const { id, merchantCode } = params;
-            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantCode(merchantCode, { productId: id });
+            const { id, merchantId } = params;
+            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantId(merchantId, { productId: id });
             if(!existMerchant) {
-                return err(new MerchantNotFoundError(merchantCode));
+                return err(new MerchantNotFoundError());
             }
             if(!isOwner) {
                 return err(new GetProductMerchantNotOwnerError());

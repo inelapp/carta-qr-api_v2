@@ -4,8 +4,7 @@ export interface CreateProductRequestDTO {
 	price: number;
 	price_2?: number;
 	categoryId: string;
-	merchantId?: string;
-	merchantCode: string;
+	merchantId: string;
 	image?: string;
 	quantity: number;
 }

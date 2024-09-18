@@ -4,6 +4,7 @@ import { CreateProductRequestDTO } from '../../useCases/product/createProduct/cr
 import { createProduct } from '../../useCases/product/createProduct';
 import { CreateProductBadRequestErrors, CreateProductMerchantNotOwnerError } from '../../useCases/product/createProduct/createProductErrors';
 import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type ProductThis = Service;
 const { MoleculerError } = Errors;
@@ -17,8 +18,8 @@ async function productCreateHandler(
 	this: ProductThis,
 	ctx: Context<CreateProductRequestDTO>
 ): Promise<ProductCreateResponse> {
-	const { name, description, price, categoryId, quantity, merchantCode } = ctx.params;
-	const result = await createProduct.execute({ name, description, price, categoryId, quantity, merchantCode: merchantCode.toUpperCase() });
+	const { name, description, price, categoryId, quantity, merchantId } = ctx.params;
+	const result = await createProduct.execute({ name, description, price, categoryId, quantity, merchantId });
 	if(result.isErr()){
 		const error = result.error;
 		switch(error.constructor){

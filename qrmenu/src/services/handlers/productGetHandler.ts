@@ -4,6 +4,7 @@ import { GetProductResponseDTO } from '../../useCases/product/getProduct/getProd
 import { GetProductRequestDTO } from '../../useCases/product/getProduct/getProductRequestDto';
 import { getProduct } from '../../useCases/product/getProduct';
 import { GetProductBadRequestError, GetProductMerchantNotOwnerError, GetProductNotFoundError } from '../../useCases/product/getProduct/getProductErrors';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type ProductThis = Service;
 const { MoleculerError } = Errors;
@@ -17,8 +18,8 @@ async function productGetHandler(
 	this: ProductThis,
 	ctx: Context<GetProductRequestDTO>
 ): Promise<ProductGetResponse> {
-	const { id, merchantCode } = ctx.params;
-	const result = await getProduct.execute({ id, merchantCode: merchantCode.toUpperCase() });
+	const { id, merchantId } = ctx.params;
+	const result = await getProduct.execute({ id, merchantId });
 	if(result.isErr()){
 		const error = result.error;
 		switch(error.constructor){

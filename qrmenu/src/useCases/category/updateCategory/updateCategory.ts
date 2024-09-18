@@ -19,7 +19,7 @@ class UpdateCategory implements UseCase<UpdateCategoryRequestDto, Response> {
 
     async execute(params: UpdateCategoryRequestDto, service?: any): Promise<Response> {
         try {
-            const { merchantCode, ...restParams } = params;
+            const { merchantId, ...restParams } = params;
             const instanceOrError = createInstanceOrError<Partial<CategoryProps>>(categoryUpdateSchema, restParams);
 
             if(instanceOrError.isErr()) {
@@ -27,9 +27,9 @@ class UpdateCategory implements UseCase<UpdateCategoryRequestDto, Response> {
             }
 
             const { id } = instanceOrError.value;
-            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantCode(merchantCode, { categoryId: id });
+            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantId(merchantId, { categoryId: id });
             if(!existMerchant) {
-                return err(new MerchantNotFoundError(merchantCode));
+                return err(new MerchantNotFoundError());
             }
             if(!isOwner) {
                 return err(new UpdateCategoryMerchantNotOwnerError());

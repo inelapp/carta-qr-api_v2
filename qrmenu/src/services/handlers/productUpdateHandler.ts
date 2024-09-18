@@ -4,6 +4,7 @@ import { UpdateProductResponseDTO } from '../../useCases/product/updateProduct/u
 import { UpdateProductRequestDTO } from '../../useCases/product/updateProduct/updateProductRequestDto';
 import { updateProduct } from '../../useCases/product/updateProduct';
 import { UpdateProductBadRequestError, UpdateProductMerchantCategoryNotOwner, UpdateProductMerchantNotOwnerError } from '../../useCases/product/updateProduct/updateProductErrors';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type ProductThis = Service;
 const { MoleculerError } = Errors;
@@ -17,8 +18,8 @@ async function productUpdateHandler(
 	this: ProductThis,
 	ctx: Context<UpdateProductRequestDTO>
 ): Promise<ProductUpdateResponse> {
-	const { id, name, description, price, categoryId, quantity, merchantCode } = ctx.params;
-	const result = await updateProduct.execute({ id, name, description, price, categoryId, quantity, merchantCode: merchantCode.toUpperCase() });
+	const { id, name, description, price, categoryId, quantity, merchantId } = ctx.params;
+	const result = await updateProduct.execute({ id, name, description, price, categoryId, quantity, merchantId });
 	if(result.isErr()){
 		const error = result.error;
 		switch(error.constructor){

@@ -4,6 +4,7 @@ import { CreateCategoryRequestDTO } from '../../useCases/category/createCategory
 import { createCategory } from '../../useCases/category/createCategory';
 import { CreateCategoryBadRequestError } from '../../useCases/category/createCategory/createCategoryErrors';
 import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type CategoryThis = Service;
 const { MoleculerError } = Errors;
@@ -17,9 +18,9 @@ async function categoryCreateHandler(
 	this: CategoryThis,
 	ctx: Context<CreateCategoryRequestDTO>
 ): Promise<CategoryCreateResponse> {
-	const { name, description, active, merchantId, merchantCode } = ctx.params;
+	const { name, description, active, merchantId } = ctx.params;
 
-	const result = await createCategory.execute({ name, description, active, merchantId, merchantCode: merchantCode.toUpperCase() });
+	const result = await createCategory.execute({ name, description, active, merchantId });
 	
 	if(result.isErr()){
 		const error = result.error;

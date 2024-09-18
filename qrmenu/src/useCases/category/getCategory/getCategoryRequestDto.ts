@@ -1,7 +1,6 @@
 export interface GetCategoryRequestDto {
     id: string;
-    merchantId?: string;
-    merchantCode: string
+    merchantId: string;
     name?: string;
     active?: boolean;
 }

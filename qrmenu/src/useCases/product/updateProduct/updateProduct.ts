@@ -21,16 +21,16 @@ class UpdateProduct implements UseCase<UpdateProductRequestDTO, Response> {
 
     async execute(params: UpdateProductRequestDTO, service?: any): Promise<Response> {
         try {
-            const { merchantCode, ...restParams } = params;
+            const { merchantId, ...restParams } = params;
             const instanceOrError = createInstanceOrError<Partial<ProductProps>>(productUpdateValidation, restParams)
             if(instanceOrError.isErr()) {
                 return err(new UpdateProductBadRequestError(instanceOrError.error));
             }
             const { id, ...props } = instanceOrError.value;
-            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantCode(merchantCode, { productId: id });
-            const { isOwner: isCategoryOwner } = await this.merchantRepository.validateMerchantCode(merchantCode, { categoryId: props.categoryId });
+            const { existMerchant, isOwner } = await this.merchantRepository.validateMerchantId(merchantId, { productId: id });
+            const { isOwner: isCategoryOwner } = await this.merchantRepository.validateMerchantId(merchantId, { categoryId: props.categoryId });
             if(!existMerchant) {
-                return err(new MerchantNotFoundError(merchantCode));
+                return err(new MerchantNotFoundError());
             }
             if(!isOwner) {
                 return err(new UpdateProductMerchantNotOwnerError());

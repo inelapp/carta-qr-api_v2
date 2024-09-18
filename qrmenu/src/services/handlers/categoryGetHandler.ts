@@ -4,6 +4,7 @@ import { GetCategoryRequestDto } from '../../useCases/category/getCategory/getCa
 import { getCategory } from '../../useCases/category/getCategory';
 import { GetCategoryBadRequestError, GetCategoryMerchantNotOwnerError, GetCategoryNotFoundError } from '../../useCases/category/getCategory/getCategoryErrors';
 import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type CategoryThis = Service;
 const { MoleculerError } = Errors;
@@ -17,8 +18,8 @@ async function categoryGetHandler(
 	this: CategoryThis,
 	ctx: Context<GetCategoryRequestDto>
 ): Promise<CategoryGetResponse> {
-    const { id, merchantCode } = ctx.params;
-	const result = await getCategory.execute({ id, merchantCode: merchantCode.toUpperCase() });
+    const { id, merchantId } = ctx.params;
+	const result = await getCategory.execute({ id, merchantId });
 	
 	if(result.isErr()){
 		const error = result.error;

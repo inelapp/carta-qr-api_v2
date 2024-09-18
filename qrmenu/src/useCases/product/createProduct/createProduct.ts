@@ -19,15 +19,15 @@ class CreateProduct implements UseCase<CreateProductRequestDTO, Response> {
 
 	async execute(params: CreateProductRequestDTO, service?: any): Promise<Response> {
 		try {
-			const { merchantCode, ...restParams } = params; 
-			const { existMerchant, merchantData, isOwner } = await this.merchantRepository.validateMerchantCode(merchantCode, { categoryId: restParams.categoryId });
+			const { merchantId, ...restParams } = params; 
+			const { existMerchant, merchantData, isOwner } = await this.merchantRepository.validateMerchantId(merchantId, { categoryId: restParams.categoryId });
 
 			if(!isOwner) {
 				return err(new CreateProductMerchantNotOwnerError());
 			}
 
 			if(!existMerchant) {
-				return err(new MerchantNotFoundError(params.merchantCode));
+				return err(new MerchantNotFoundError());
 			}
 
 			const productOrError = Product.create({

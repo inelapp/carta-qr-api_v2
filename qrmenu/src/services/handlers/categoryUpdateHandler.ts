@@ -4,6 +4,7 @@ import { UpdateCategoryRequestDto } from '../../useCases/category/updateCategory
 import { updateCategory } from '../../useCases/category/updateCategory';
 import { UpdateCategoryBadRequestError, UpdateCategoryMerchantNotOwnerError, UpdateCategoryNotFoundError } from '../../useCases/category/updateCategory/updateCategoryErrors';
 import { MerchantNotFoundError } from '@service/commons/dist/src/shared';
+import { IMerchantMeResponse } from '@service/commons/dist/src/types';
 
 type CategoryThis = Service;
 const { MoleculerError } = Errors;
@@ -17,9 +18,9 @@ async function categoryUpdateHandler(
 	this: CategoryThis,
 	ctx: Context<UpdateCategoryRequestDto>
 ): Promise<CategoryUpdateResponse> {
-	const { name, description, active, id, merchantCode } = ctx.params;
+	const { name, description, active, id, merchantId } = ctx.params;
 
-	const result = await updateCategory.execute({ name, description, active, id, merchantCode: merchantCode.toUpperCase() });
+	const result = await updateCategory.execute({ name, description, active, id, merchantId: '66dca7dd375195050a3ac0a2' });
 	
 	if(result.isErr()){
 		const error = result.error;

@@ -20,10 +20,10 @@ class CreateCategory implements UseCase<CreateCategoryRequestDTO, Response> {
 
 	async execute(params: CreateCategoryRequestDTO, service?: any): Promise<Response> {
 		try {
-			const { merchantCode, ...restParams } = params;
-			const { existMerchant, merchantData } = await this.merchantRepository.validateMerchantCode(merchantCode, {});
+			const { merchantId, ...restParams } = params;
+			const { existMerchant, merchantData } = await this.merchantRepository.validateMerchantId(merchantId, {});
 			if(!existMerchant) {
-				return err(new MerchantNotFoundError(merchantCode));
+				return err(new MerchantNotFoundError(merchantId));
 			}
 
 			const categoryOrError = Category.create({ ...restParams, merchantId: merchantData._id.toString() });

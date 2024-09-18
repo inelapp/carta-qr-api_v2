@@ -1,35 +1,67 @@
 import { IMerchantProps, Merchant } from "../../domains";
 import { IMerchantRepository } from "../merchant.repositoy";
-import { Model } from "mongoose";
-import { categoryModel, ICategoryDb, IMerchantDb, IProductDb, merchantModel, productModel } from "../../db";
-import { IGetMerchantResponse, IMerchantValidateOptions, IMerchantValidateResponse, MerchantFilter, MerchantMap } from "../../mappers";
+import { connection, Model } from "mongoose";
+import { categoryModel, ICategoryDb, IMerchantDb, IProductDb, merchantAuthModel, merchantModel, productModel } from "../../db";
+import { IGetMerchantAuthResponse, IGetMerchantResponse, IMerchantValidateOptions, IMerchantValidateResponse, MerchantAuthGetRequest, MerchantFilter, MerchantInsertResponse, MerchantMap } from "../../mappers";
+import { v4 as uuid } from 'uuid'
+import { IMerchantAuthDb } from "src/db/interface/merchant.auth";
 
 export class MerchantImpRepository implements IMerchantRepository {
     private readonly merchantEntity: Model<IMerchantDb>
     private readonly productEntity: Model<IProductDb>
     private readonly categoryEntity: Model<ICategoryDb>;
+    private readonly merchantAuthEntity: Model<IMerchantAuthDb>;
 
     constructor() {
         this.merchantEntity = merchantModel;
         this.productEntity = productModel;
         this.categoryEntity = categoryModel;
+        this.merchantAuthEntity = merchantAuthModel;
+    }
+    async getMerchantByPublickKey(publicKey: string): Promise<IGetMerchantAuthResponse | null> {
+        try {
+            const merchantAuthResult = await this.merchantAuthEntity.findOne({ publicKey }).populate('merchantId');
+            if(!merchantAuthResult) return null;
+            return MerchantMap.toAuthDto(merchantAuthResult as unknown as MerchantAuthGetRequest);
+        } catch (error: Error | any) {
+            throw new Error(error);
+        }
     }
 
-    async validateMerchantCode(merchantCode: string, options: IMerchantValidateOptions): Promise<IMerchantValidateResponse> {
+    async merchantEmailExist(merchantEmail: string): Promise<boolean> {
+        try {
+            const result = await this.merchantEntity.exists({ email: merchantEmail });
+            if(result) return true;
+            return false;
+        } catch (error: Error | any) {
+            throw new Error(error);
+        }
+    }
+    async merchantCodeExist(merchantCode: string): Promise<boolean> {
+        try {
+            const result = await this.merchantEntity.exists({ merchantCode });
+            if(result) return true;
+            return false;
+        } catch (error: Error | any) {
+            throw new Error(error);
+        }
+    }
+
+    async validateMerchantId(merchantId: string, options: IMerchantValidateOptions): Promise<IMerchantValidateResponse> {
         try {
             let isOwner = false;
-            const merchantByCode = await this.merchantEntity.findOne({ merchantCode });
+            const merchant = await this.merchantEntity.findOne({ _id: merchantId });
             
-            let existMerchant = !!merchantByCode;
+            let existMerchant = !!merchant;
 
             if(options.productId) {
-                const productByMerchant = await this.productEntity.findOne({ _id: options.productId, merchantId: merchantByCode?._id });
+                const productByMerchant = await this.productEntity.findOne({ _id: options.productId, merchantId: merchant?._id });
                 isOwner = productByMerchant ? true : false;
             } else if(options.categoryId) {
-                const categoryByMerchant = await this.categoryEntity.findOne({ _id: options.categoryId, merchantId: merchantByCode?._id });
+                const categoryByMerchant = await this.categoryEntity.findOne({ _id: options.categoryId, merchantId: merchant?._id });
                 isOwner = categoryByMerchant ? true : false;
             }
-            return { existMerchant, isOwner, merchantData: merchantByCode as IMerchantDb };
+            return { existMerchant, isOwner, merchantData: merchant as IMerchantDb };
         } catch (error: Error | any) {
             throw new Error(error);
         }
@@ -70,24 +102,36 @@ export class MerchantImpRepository implements IMerchantRepository {
         }
     }
     
-    async createMerchant(merchant: IMerchantProps): Promise<Merchant> {
+    async createMerchant(merchant: IMerchantProps): Promise<MerchantInsertResponse> {
+        const session = await connection.startSession();
         try {
-            const newMerchant = new this.merchantEntity({
-                name: merchant.name,
-                address: merchant.address,
-                phone: merchant.phone,
-                email: merchant.email,
-                password: merchant.password,
-                active: merchant.active,
-                merchantCode: merchant.merchantCode
+            return await session.withTransaction(async () => {
+                const publicKey = uuid();
+                const secretKey = uuid();
+                const newMerchant = new this.merchantEntity({
+                    name: merchant.name,
+                    address: merchant.address,
+                    phone: merchant.phone,
+                    email: merchant.email,
+                    password: merchant.password,
+                    active: merchant.active,
+                    merchantCode: merchant.merchantCode
+                })
+                const merchantSaved = await newMerchant.save({ session });
+                const merchantAuth = new this.merchantAuthEntity({
+                    merchantId: merchantSaved._id,
+                    publicKey,
+                    secretKey
+                })
+                await merchantAuth.save({ session });
+                const result = MerchantMap.toDomain({ publicKey, secretKey, ...merchantSaved.toObject() });
+                return result;
             })
-            const result = MerchantMap.toDomain(await newMerchant.save());
-            return result;
         } catch (error: Error | any) {
+            await session.abortTransaction();
             throw new Error(error);
+        } finally {
+            await session.endSession();
         }
     }
-
-    
-
 }

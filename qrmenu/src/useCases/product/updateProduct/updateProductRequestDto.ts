@@ -1,6 +1,6 @@
 export interface UpdateProductRequestDTO {
     id: string;
-    merchantCode: string;
+    merchantId: string;
     name: string;
     price: number;
     price_2?: number;

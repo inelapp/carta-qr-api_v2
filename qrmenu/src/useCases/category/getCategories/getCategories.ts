@@ -19,10 +19,10 @@ class GetCategories implements UseCase<GetCategoriesRequestDTO, Response> {
 
     async execute(params: GetCategoriesRequestDTO, service?: any): Promise<Response> {
         try {
-            const { merchantCode } = params;
-            const { existMerchant, merchantData } = await this.merchantRepository.validateMerchantCode(merchantCode, {});
+            const { merchantId } = params;
+            const { existMerchant, merchantData } = await this.merchantRepository.validateMerchantId(merchantId, {});
             if(!existMerchant) {
-                return err(new MerchantNotFoundError(merchantCode));
+                return err(new MerchantNotFoundError());
             }
             const result = await this.categoryRepository.getCategories({ merchantId: merchantData._id });
             return ok(result);
