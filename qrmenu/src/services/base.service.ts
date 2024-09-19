@@ -14,6 +14,7 @@ import { productGetHandler } from './handlers/productGetHandler';
 import { productsGetHandler } from './handlers/productsGetHandler';
 import { productUpdateHandler } from './handlers/productUpdateHandler';
 import { merchantGetMeHandler } from './handlers/merchantGetMeHandler';
+import { merchantSignMeHandler } from './handlers/merchantSignHandler';
 
 const apiVersion = 'v1';
 const qrmenuService: ServiceSchema = {
@@ -134,7 +135,14 @@ const qrmenuService: ServiceSchema = {
 				before: [authenticateAndAuthorizeAll]
 			}
 		},
-		merchantGetMe: merchantGetMeHandler
+		merchantGetMe: merchantGetMeHandler,
+		merchantSign: {
+			rest: {
+				method: 'POST',
+				path: `${apiVersion}/merchants/sign`
+			},
+			handler: merchantSignMeHandler
+		}
 	}
 };
 
